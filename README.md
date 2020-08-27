@@ -4,6 +4,7 @@ Small game
 ## Dowload using git
 **Configures in unity:**
 Version Control -> Mode -> select option: Visible Meta Files
+
 Asset Serialization -> Mode -> select option : Force Text
 
 1. Proceed to the outside of the unity project folder, right click somewhere else and select "Git bash here".
