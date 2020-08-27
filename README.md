@@ -16,8 +16,11 @@ Asset Serialization -> Mode -> select option : Force Text
 2. Use the following to create a new branch with a meaningful name.
  
  `git checkout -b "branch_name"`
-  You should be able to see the branch name on the prompt change. 
+  
+You should be able to see the branch name on the prompt change. 
+
 3. Copy and paste everything from the unity project folder to the local repo folder. ~~it will probabily delete everthing that you download from github but I guess that can be fixed when merging branches later on~~
+
 4. Use the following to upload to github.
   
  `git add .`
