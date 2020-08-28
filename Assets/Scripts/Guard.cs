@@ -28,6 +28,8 @@ public class Guard : MonoBehaviour
         
         if (InSights())
         {
+            //float thrust = Time.deltaTime * 1555 * Input.GetAxis("Vertical");
+            //rb.AddForce(transform.forward * thrust);
             rb.AddForce(this.transform.forward * movement_speed);
             Vector3 target_direction = Vector3.RotateTowards(this.transform.forward, player.transform.position - this.transform.position, rotation_speed / 4 * Time.deltaTime, 0.0f);
             this.transform.forward = target_direction;
