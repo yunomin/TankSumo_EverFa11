@@ -39,8 +39,13 @@ public class PlayerControls : MonoBehaviour
             }
             if (Input.GetButton("Horizontal"))
             {
-                thrust = Time.deltaTime * 5000 * Input.GetAxis("Horizontal");
-                rb.AddTorque(transform.up*thrust);
+                //thrust = (/*Time.deltaTime +*/ 1.0f) * 20 * Input.GetAxis("Horizontal");
+                /*if (Time.deltaTime > 1.0)
+                {
+                    thrust = 20;
+                }*/
+                thrust = 20 * Input.GetAxis("Horizontal"); ;
+                rb.AddForce(transform.up*thrust);
             }
             
 
