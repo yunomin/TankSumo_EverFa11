@@ -8,9 +8,9 @@ public class Guard : MonoBehaviour
     public GameObject player;
     private Rigidbody rb;
     private NavMeshAgent navmesh;
-    private float movement_speed;
-    private float rotation_speed;
-    private int difficulty;
+    public float movement_speed;
+    public float rotation_speed;
+    public int difficulty;
 
     // Start is called before the first frame update
     void Start()
@@ -38,6 +38,7 @@ public class Guard : MonoBehaviour
         {
             Vector3 target_direction = Vector3.RotateTowards(this.transform.forward, player.transform.position - this.transform.position, rotation_speed * Time.deltaTime, 0.0f);
             this.transform.forward = target_direction;
+            //rb.AddForce(this.transform.forward * movement_speed *-1);
         }
         if (Vector3.Distance(this.transform.position, player.transform.position) < 5)
         {
