@@ -15,6 +15,11 @@ public class PlayerControls : MonoBehaviour
     public Rigidbody rb;
     public float thrust;
     public float boostThrust;
+    public static float boostCapacity;
+    public float boostCapacityMirror; // exists so I can see it live in the editor without needing to print it out.
+    public bool boosting; // returns true if player is actively boosting
+    public bool onGround; //returns true if player is on the ground.
+    private Vector3 m_EulerAngleVelocity;
 
     // Start is called before the first frame update
     void Start()
@@ -22,72 +27,82 @@ public class PlayerControls : MonoBehaviour
         GetComponent<Rigidbody>().centerOfMass = new Vector3(0f, mass, 0f);
         moveSpeed = 1f;
         rb = GetComponent<Rigidbody>();
-        boostThrust = 2000;
+        onGround = true;
+        boostThrust = 20;
+        boostCapacity = 100;
+        boostCapacityMirror = boostCapacity;
+        boosting = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetButton("Horizontal") || Input.GetButton("Vertical"))
+        if (onGround)
         {
-            isMoving = true;
-
-            if (Input.GetButton("Vertical"))
+            if (Input.GetButton("Horizontal") || Input.GetButton("Vertical"))
             {
-                thrust = Time.deltaTime * 1555 * Input.GetAxis("Vertical");
-                rb.AddForce(transform.forward * thrust );
+                isMoving = true;
+
+                if (Input.GetButton("Vertical"))
+                {
+                    thrust = Time.deltaTime * 1555 * Input.GetAxis("Vertical");
+                    rb.AddForce(transform.forward * thrust);
+                }
+                if (Input.GetButton("Horizontal"))
+                {
+                    if (Vector3.Dot(transform.up, Vector3.down) > 0)
+                    {
+                        rb.AddTorque(transform.forward * 25.0f * Input.GetAxis("Horizontal"));
+                    }
+                    //thrust = (Time.deltaTime + 0.2f) * 1000 * Input.GetAxis("Horizontal");
+                    if (rb.angularVelocity.magnitude < 1.0f)
+                    {
+                        rb.AddTorque(transform.up * 125.0f * Input.GetAxis("Horizontal"));
+                    }
+                }
             }
-            if (Input.GetButton("Horizontal"))
+            if (Input.GetKey("space"))
             {
-                //thrust = (Time.deltaTime + 0.2f) * 1000 * Input.GetAxis("Horizontal");
-                if (rb.angularVelocity.magnitude < 1.0f) {
-                    rb.AddTorque(transform.up * 125.0f * Input.GetAxis("Horizontal"));
-                }    
+                if (boostCapacity > 1)
+                {
+                    boosting = true;
+                    rb.AddForce(transform.forward * boostThrust);
+                    print("Boosting! Capacity: " + boostCapacity);
+                    boostCapacity -= 50 * Time.deltaTime;
+
+                }
             }
+            else
+            {
+                boosting = false;
+                
+                //rb.velocity = rb.velocity * 0.8f; 
+                //print("No longer boosting");
+                thrust = 0;
+            }
+            boostCapacityMirror = boostCapacity;
         }
-        if (Input.GetKeyDown("space"))
+        if(!boosting)
         {
-            
-            rb.AddForce(transform.forward * boostThrust);
-            print("Boosting!");
-
+            if (boostCapacity < 100) // checks so you won't add more boost fuel when it's full. 
+            { boostCapacity += 4.75f * Time.deltaTime; }
         }
 
-        else
+    }
+
+    void OnCollisionEnter(Collision theCollision)
+    {
+        if (theCollision.gameObject.name == "floor")
         {
-            thrust = 0;
+            onGround = true;
+
         }
-
-        //This section is for non physics based movement. It works, but is buggy.
-        /*
-           if (Input.GetButton("Horizontal") || Input.GetButton("Vertical"))
-           {
-
-               isMoving = true;
-               if (Input.GetButton("Horizontal"))
-               {
-                   viewAxisH = Input.GetAxis("Horizontal");
-                   hMove = Input.GetAxis("Horizontal") * Mathf.Abs(Time.deltaTime) * 150f;
-                   thePlayer.transform.Rotate(0, hMove, 0);
-               }
-               if (Input.GetButton("Vertical"))
-               {
-                   viewAxisV = Input.GetAxis("Vertical");
-                   vMove = Input.GetAxis("Vertical") * Mathf.Abs(Time.deltaTime) * 150f;
-                   thePlayer.transform.Translate(0, 0, vMove);
-               }
-                  // hMove = 0;
-              // vMove = 0;
-
-           }
-
-           else
-           {
-               isMoving = false;
-               hMove = 0;
-               vMove = 0;
-           }*/
-
-
+    }
+    void OnCollisionExit(Collision theCollision)
+    {
+        if (theCollision.gameObject.name == "floor")
+        {
+            onGround = false;
+        }
     }
 }

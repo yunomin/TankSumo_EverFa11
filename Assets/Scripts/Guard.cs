@@ -15,6 +15,7 @@ public class Guard : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        player = GameObject.Find("Player");
         navmesh = GetComponent<NavMeshAgent>();
         rb = GetComponent<Rigidbody>();
         movement_speed = 5.0f;
