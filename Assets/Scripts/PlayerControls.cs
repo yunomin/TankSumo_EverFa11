@@ -39,11 +39,11 @@ public class PlayerControls : MonoBehaviour
             }
             if (Input.GetButton("Horizontal"))
             {
-                thrust = Time.deltaTime * 5000 * Input.GetAxis("Horizontal");
-                rb.AddTorque(transform.up*thrust);
+                //thrust = (Time.deltaTime + 0.2f) * 1000 * Input.GetAxis("Horizontal");
+                if (rb.angularVelocity.magnitude < 1.0f) {
+                    rb.AddTorque(transform.up * 125.0f * Input.GetAxis("Horizontal"));
+                }    
             }
-            
-
         }
         if (Input.GetKeyDown("space"))
         {
