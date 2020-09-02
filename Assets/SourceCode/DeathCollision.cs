@@ -5,9 +5,9 @@ public class DeathCollision : MonoBehaviour
 {
     void OnCollisionEnter(Collision info)
     {
-        if (info.collider.name == "Ground")
+        if (info.collider.name == "Player")
         {
-            SceneManager.LoadScene("GameScene");
+            SceneManager.LoadScene("EndScene");
         }
     }
 }
